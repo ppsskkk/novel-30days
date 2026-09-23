@@ -26,6 +26,8 @@ jobs:
 
       - name: 拆分全书（仅手动选择 split 时）
         if: github.event.inputs.action == 'split'
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: python scripts/split_novel.py
 
       - name: 生成、排版、配图、发邮件
