@@ -44,18 +44,18 @@ for item in items[:3]:
         f'box-shadow:0 2px 8px rgba(0,0,0,0.1);"/>{caption_html}'
     )
 
-# 3. 插图：第一张放标题下方当封面，其余插在小标题后
+# 3. 插图：第一张放标题下方，其余插在小标题后（从后往前插，避免位置错乱）
 if blocks:
     html = re.sub(r"(</h1>)", r"\1" + blocks[0], html, count=1)
-    h2s = list(re.finditer(r"</h2>", html))
-    for i, m in enumerate(h2s[: len(blocks) - 1], start=1):
+    h2s = list(re.finditer(r"</h2>", html))[: len(blocks) - 1]
+    for m, block in zip(reversed(h2s), reversed(blocks[1:])):
         pos = m.end()
-        html = html[:pos] + blocks[i] + html[pos:]
+        html = html[:pos] + block + html[pos:]
 
 # 4. 包整体底色
 final = (
     '<div style="max-width:677px;margin:0 auto;background:#fffdf9;'
-    'padding:24px 18px;font-family:-apple-system,PingFang SC,Microsoft YaHei,sans-serif;">'
+    'padding:10px 2px;font-family:-apple-system,PingFang SC,Microsoft YaHei,sans-serif;">'
     + html + "</div>"
 )
 open(f"output/day{day:02d}_final.html", "w", encoding="utf-8").write(final)
